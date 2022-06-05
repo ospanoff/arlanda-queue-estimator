@@ -6,3 +6,13 @@
   color: #2c3e50;
   margin-top: 60px;
 }
+
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.chart {
+  position: relative; 
+  width: 45vw;
+}

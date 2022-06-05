@@ -12,6 +12,7 @@
     "vite": "^2.9.9"
   },
   "dependencies": {
+    "chart.js": "^3.8.0",
     "firebase": "^9.8.2"
   }
 }
