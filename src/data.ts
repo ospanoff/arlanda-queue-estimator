@@ -3,6 +3,10 @@ import { functions } from "./firebase";
 
 const getFlights = httpsCallable(functions, "getFlights");
 
+if (import.meta.env.VITE_USE_LOCAL_CLOUD_FUNCTIONS === "true") {
+  connectFunctionsEmulator(functions, "localhost", 5001);
+}
+
 interface Flight {
   destination: string;
   flightId: string;
