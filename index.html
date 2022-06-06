@@ -4,15 +4,35 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
+    <title>Arlanda Airport Busyness</title>
   </head>
   <body>
     <div id="app">
-      <div class="container">
-        <div class="chart">
-          <canvas id="flightsPerHour"></canvas>
+      <div class="flex justify-center">
+        <div class="flex items-center max-w-xs">
+          <div class="w-1/2 text-right">
+            <label for="flightsDate" class="text-gray-500 font-bold">
+              Departure date
+            </label>
+          </div>
+          <div class="w-1/2">
+            <input
+              id="flightsDate"
+              type="date"
+              class="border-0"
+              onchange="plot(this.value)"
+            />
+          </div>
         </div>
-        <!-- <div class="chart">
+      </div>
+      <div class="flex flex-wrap items-center">
+        <div class="w-full md:w-1/2 md:p-5">
+          <canvas id="flightsPerHourT5"></canvas>
+        </div>
+        <div class="w-full md:w-1/2 md:p-5">
+          <canvas id="flightsPerHourT2"></canvas>
+        </div>
+        <!-- <div>
           <canvas id="pasengersPerHour"></canvas>
         </div> -->
       </div>
