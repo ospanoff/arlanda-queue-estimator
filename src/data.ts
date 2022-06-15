@@ -8,7 +8,7 @@ if (import.meta.env.VITE_USE_LOCAL_CLOUD_FUNCTIONS === "true") {
   connectFunctionsEmulator(functions, "localhost", 5001);
 }
 
-interface Flight {
+export interface Flight {
   destination: string;
   flightId: string;
   scheduledDepartureTime: string;

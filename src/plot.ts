@@ -1,13 +1,14 @@
 import Chart, { ChartType } from "chart.js/auto";
 
-import { FlightsFetcher } from "./data";
+import { Flight, FlightsFetcher } from "./data";
 
 let charts: any[] = [];
 
-const plotFlightsPerHour = async (date: string, terminal: string = "5") => {
-  const flights = (await FlightsFetcher.fetch(date)).filter(
-    (flight) => flight.terminal === terminal
-  );
+const plotFlightsPerHour = async (
+  allFlights: Flight[],
+  terminal: string = "5"
+) => {
+  const flights = allFlights.filter((flight) => flight.terminal === terminal);
   let flightsPerHour: { [key: number]: number } = {};
   flights.forEach((flight) => {
     const hour = new Date(flight.scheduledDepartureTime).getHours();
@@ -52,21 +53,31 @@ const plotFlightsPerHour = async (date: string, terminal: string = "5") => {
     },
   };
 
-  charts.push(
-    new Chart(
-      document.querySelector<HTMLCanvasElement>(`#flightsPerHourT${terminal}`)!,
-      config
-    )
-  );
+  charts.push(new Chart(createCanvas(), config));
 };
 
-const plotPasengersPerHour = async () => {
-  // TODO: Implement
+const createCanvas = () => {
+  const canvas = document.createElement("canvas");
+
+  const chartDiv = document.createElement("div");
+  chartDiv.className = "w-full md:w-1/2 md:p-5";
+  chartDiv.appendChild(canvas);
+
+  const chartsDiv = document.querySelector<HTMLDivElement>(`#charts`)!;
+  chartsDiv.appendChild(chartDiv);
+
+  return canvas;
 };
 
-export const destroyCharts = () => {
+const destroyCanvases = () => {
+  const chartsDiv = document.querySelector<HTMLDivElement>(`#charts`)!;
+  chartsDiv.textContent = "";
+};
+
+const destroyCharts = () => {
   charts.forEach((chart) => chart.destroy());
-  charts = [];
+  charts.length = 0;
+  destroyCanvases();
 };
 
 export const plot = async (date?: string) => {
@@ -74,7 +85,11 @@ export const plot = async (date?: string) => {
   if (date === undefined) {
     date = new Date().toISOString().slice(0, 10);
   }
-  await plotFlightsPerHour(date, "5");
-  await plotFlightsPerHour(date, "2");
-  await plotPasengersPerHour();
+  const flights = await FlightsFetcher.fetch(date);
+  const uniqTerminals = new Set(flights.map((flight) => flight.terminal));
+  uniqTerminals.delete("5");
+  const terminals = Array.from(uniqTerminals).sort();
+  ["5", ...terminals].forEach(
+    async (terminal) => await plotFlightsPerHour(flights, terminal)
+  );
 };
